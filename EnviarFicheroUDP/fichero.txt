@@ -1,0 +1,4 @@
+Hola:
+Me llamo morad
+soy el contenido del fichero
+Adios
