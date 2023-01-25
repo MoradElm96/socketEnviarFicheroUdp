@@ -1,20 +1,14 @@
 package enviarFichero;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
+
 
 public class Servidor {
 
@@ -43,30 +37,35 @@ public class Servidor {
 				int puerto = paqueteRecibido.getPort();
 				
 				String nombreArchivo = new String(paqueteRecibido.getData()).trim();
-			    System.out.println("cliente ha pedido leer el archivo: " + nombreArchivo);
+			    System.out.println("cliente ha pedido leer el archivo: " + nombreArchivo );
 			    
 			    
-			    File fichero = new File(nombreArchivo);
 			    
-			    if(fichero.exists()) {
-			    	//usamos el metodo para leer
-			    	 byte [] enviar = leerFichero(nombreArchivo).getBytes();
-			    	 
+			    //leemos
+			    String contenidoFichero;
+			    contenidoFichero = leerFichero(nombreArchivo);
+			    
+			    if(contenidoFichero!=null) {
+			    	 byte [] enviar = contenidoFichero.getBytes();
 			    	 DatagramPacket respuesta = new DatagramPacket(enviar,  enviar.length, direccion, puerto);
 					 socketServidor.send(respuesta);
-					 socketServidor.close();
-					 
+					
+			    	
 			    }else {
-			    
-			    	 String resultado = "404: File not found";
-			    	 byte [] enviar = resultado.getBytes();
+			    	contenidoFichero = "404: File not found";
+			    	 byte [] enviar = contenidoFichero.getBytes();
 			    	 DatagramPacket respuesta = new DatagramPacket(enviar,  enviar.length, direccion, puerto);
 					 socketServidor.send(respuesta);
-	 
+					
 			    }
+			   
 			    
-				
+			 
+				 socketServidor.close();
 			}
+			
+			
+			
 			
 			
 	} catch (Exception e) {
@@ -82,27 +81,37 @@ public class Servidor {
 	}
 
 	public static String leerFichero(String nombre) {
-		String contenido="";
+		StringBuilder sb = null;
 		try {
+		
+		
 			File fichero = new File(nombre);
+			
 			FileReader fr = new FileReader(fichero);
 			BufferedReader br = new BufferedReader(fr);
+			
+			 sb = new StringBuilder();
 			String linea = br.readLine();
 			
 			while(linea!=null) {
-				contenido = contenido + linea + "\n";
+				
+				sb.append(linea);
+				//separamos por lineas el texto
+				sb.append(System.lineSeparator());
+				linea = br.readLine();
 			}
 			
 			br.close();
 			fr.close();
-			
-	
+		
+		
 			
 			
 		}catch(Exception e) {
 			System.out.println("Error al leer el fichero");
 		}
-		return contenido;
+		
+		return sb.toString();
 	}
 
 }
