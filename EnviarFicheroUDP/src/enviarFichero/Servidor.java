@@ -25,7 +25,7 @@ public class Servidor {
 			
 			
 
-			while (true) {
+		//	while (true) {
 				
 				System.out.println("Servidor escuchando... esperando al cliente ");
 				DatagramPacket paqueteRecibido = new DatagramPacket(recibido, recibido.length);         	
@@ -45,11 +45,13 @@ public class Servidor {
 			    String contenidoFichero;
 			    contenidoFichero = leerFichero(nombreArchivo);
 			    
+			    
 			    if(contenidoFichero!=null) {
 			    	 byte [] enviar = contenidoFichero.getBytes();
 			    	 DatagramPacket respuesta = new DatagramPacket(enviar,  enviar.length, direccion, puerto);
 					 socketServidor.send(respuesta);
 					
+					 
 			    	
 			    }else {
 			    	contenidoFichero = "404: File not found";
@@ -62,7 +64,7 @@ public class Servidor {
 			    
 			 
 				 socketServidor.close();
-			}
+			//}
 			
 			
 			
@@ -81,7 +83,8 @@ public class Servidor {
 	}
 
 	public static String leerFichero(String nombre) {
-		StringBuilder sb = null;
+		
+		StringBuilder sb = new StringBuilder();
 		try {
 		
 		
@@ -90,7 +93,7 @@ public class Servidor {
 			FileReader fr = new FileReader(fichero);
 			BufferedReader br = new BufferedReader(fr);
 			
-			 sb = new StringBuilder();
+			
 			String linea = br.readLine();
 			
 			while(linea!=null) {
@@ -108,7 +111,8 @@ public class Servidor {
 			
 			
 		}catch(Exception e) {
-			System.out.println("Error al leer el fichero");
+			sb.append("404: File not found");
+			
 		}
 		
 		return sb.toString();
