@@ -1,0 +1,8 @@
+Este programa funciona de la siguiente manera:
+El cliente escribe por teclado la ruta o nombre del fichero 
+y este lo envia al servidor,
+si lo encuentra, el servidor lee el contenido y se lo pasa al cliente
+y finaliza el programa.
+En caso contrario el cliente tiene que volver a 
+introducir bien escrito el nombre  o ruta.
+si sigue dando fallo : asegurarse de que exista ese archivo.
